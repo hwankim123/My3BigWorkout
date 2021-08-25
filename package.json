@@ -1,0 +1,24 @@
+{
+  "name": "my3bigworkout",
+  "version": "1.0.0",
+  "description": "personal project : node server & RESTful API for health care application",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hwankim123/my3bigworkout.git"
+  },
+  "author": "Hwan Kim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hwankim123/my3bigworkout/issues"
+  },
+  "homepage": "https://github.com/hwankim123/my3bigworkout#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "type": "module"
+}
