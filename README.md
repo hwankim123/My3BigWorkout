@@ -47,7 +47,7 @@
 > ### 3.2. 백엔드 : Node.js(Express) + MySql
 ------------
 ## 4. 개발 Log
-> * 21.08.25 : Express 환경 구성, app.js와 기본 미들웨어 구성
-> * 08.30 ~ 09.01 : auth Router 생성, Sign Up 기능 구현
+> #### 21.08.25 : Express 환경 구성, app.js와 기본 미들웨어 구성
+> #### 08.30 ~ 09.01 : auth Router 생성, Sign Up 기능 구현
 > > * jwt, bcrypt 라이브러리 추가, request - response 정상 동작 확인 후 MVC 패턴에 맞게 리팩토링
-> * (진행중) : 로그인 및 로그인 인증 기능 구현
+> #### (진행중) : 로그인 및 로그인 인증 기능 구현
