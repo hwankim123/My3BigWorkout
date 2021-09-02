@@ -12,13 +12,17 @@ let userData = [
     }
 ];
 
-export async function FindByUsername(username){
-    return userData.find(user => user.username === username);
-}
-
 export async function Create(user){
     userData = [
         user, ...userData
     ];
     console.log('SignUp Success : ', userData);
+}
+
+export async function FindByUsername(username){
+    return userData.find(user => user.username === username);
+}
+
+export async function FindById(id){
+    return userData.find(user => user.id === id);
 }

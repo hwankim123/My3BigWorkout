@@ -1,8 +1,7 @@
 import express from 'express';
 import {body, validationResult} from 'express-validator';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import * as authController from '../controller/auth.js';
+import {isAuth} from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -49,8 +48,11 @@ router.post('/signup', [
     Validate
 ], authController.SignUp);
 
-router.post('/login', (req, res, next) => {});
+router.post('/login', [
+    ...validateCredential,
+    Validate
+], authController.Login);
 
-router.post('/me', (req, res, next) => {});
+router.post('/me', isAuth, authController.Me);
 
 export default router;
