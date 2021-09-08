@@ -2,21 +2,9 @@ import express from 'express';
 import {body, validationResult} from 'express-validator';
 import * as authController from '../controller/auth.js';
 import {isAuth} from '../middleware/auth.js';
+import {Validate} from '../middleware/validate.js';
 
 const router = express.Router();
-
-const Validate = (req, res, next) => {
-    const error = validationResult(req);
-    if (!error.isEmpty()) {
-        console.error('Validation error : ', error);
-        res
-            .status(400)
-            .json({message: error.array()});
-    } else {
-        console.log('Validation Passed');
-        next();
-    }
-}
 
 const validateCredential = [
     body('username')

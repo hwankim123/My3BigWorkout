@@ -2,13 +2,16 @@ import express from 'express';
 import 'express-async-errors';
 import morgan from 'morgan';
 import authRouter from './router/auth.js';
+import cors from 'cors';
+import {config} from './config.js';
 
 const app = express();
-const port = 3000;
+const port = config.host.port;
 
 // 써드 파티 미들웨어
 app.use(express.json());
 app.use(morgan('tiny'));
+app.use(cors());
 
 // router 사용 선언
 app.use('/auth', authRouter);
