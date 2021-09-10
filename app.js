@@ -1,9 +1,10 @@
 import express from 'express';
 import 'express-async-errors';
 import morgan from 'morgan';
-import authRouter from './router/auth.js';
 import cors from 'cors';
 import {config} from './config.js';
+import authRouter from './router/auth.js';
+import routineRouter from './router/routine.js';
 
 const app = express();
 const port = config.host.port;
@@ -15,11 +16,12 @@ app.use(cors());
 
 // router 사용 선언
 app.use('/auth', authRouter);
+app.use('/routine', routineRouter);
 
 // 404
 app.use((req, res) => {
     console.error('잘못된 경로. 404 Not Found');
-    res.setStatus(404);
+    res.sendStatus(404);
 });
 
 // 500. Server Error

@@ -1,7 +1,8 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import * as userData from '../data/auth.js'; 
-import {config} from '../config.js'
+import * as routineData from '../data/routine.js'; 
+import {config} from '../config.js';
 
 const bcryptSaltRounds = config.bcrypt.saltRounds;
 const expiresIn = config.jwt.expiresSec;
@@ -70,6 +71,7 @@ export async function Login(req, res){
     }
     else{
         const token = createJWT(user.id);
+        console.log("Login Success / userId : ", user.id);
         res.status(200).json({token, username});
     }
 }
@@ -82,10 +84,10 @@ function createJWT(id){
 }
 
 export async function Me(req, res){
-    const user = await userData.FindById(req.userId); // 이미 isAuth 미들웨어에서 user를 찾는데 또찾는건 좀 비효율적일듯.
+    const user = await userData.FindById(req.userId);
     if(!user){
         console.error('/auth/me(error):', user);
         return res.status(404).json({message: 'User Not Found'});
     }
-    res.status(200).json({token: req.token, username: user.username});
+    res.status(200).json({username: user.username});
 }
