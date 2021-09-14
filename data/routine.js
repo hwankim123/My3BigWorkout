@@ -62,11 +62,11 @@ let routineData = [{
     ],
 }];
 
-export async function FindById(id){
+export async function GetById(id){
     return routineData.find(routine => routine.id === id);
 }
 
-export async function FindByName(name){
+export async function GetByName(name){
     return routineData.find(routine => routine.name === name);
 }
 
@@ -83,7 +83,7 @@ export async function Create(routine){
 }
 
 export async function UpdateById(id, routine){
-    let found = await FindById(id);
+    let found = await GetById(id);
     if(found){
         found.isShared = routine.isShared;
         found.workouts = routine.workouts;

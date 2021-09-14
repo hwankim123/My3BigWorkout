@@ -14,7 +14,7 @@ export async function IsAuth(req, res, next) {
         console.error('IsAuth(): JWT token not used in req header');
         return res
             .status(401)
-            .json({message: AUTH_ERROR});
+            .json({AUTH_ERROR});
     }
     const token = authHeader.split(' ')[1];
 
@@ -27,7 +27,7 @@ export async function IsAuth(req, res, next) {
             console.error('IsAuth():', error);
             return res
                 .status(401)
-                .json({message: AUTH_ERROR});
+                .json({AUTH_ERROR});
         }
         const user = userData.FindById(decoded.id);
         // 등록된 사용자가 아닌 경우
@@ -35,7 +35,7 @@ export async function IsAuth(req, res, next) {
             console.error('IsAuth(): user not found');
             return res
                 .status(401)
-                .json({message: AUTH_ERROR});
+                .json({AUTH_ERROR});
         }
         req.userId = decoded.id;
         console.log('IsAuth(): User Id:', decoded.id);

@@ -12,7 +12,7 @@ export async function GetAllByUserId(req, res) {
 
 export async function GetOneById(req, res) {
     const id = parseInt(req.params.id);
-    const data = await routineData.FindById(id);
+    const data = await routineData.GetById(id);
     res
         .status(200)
         .json(data);
@@ -26,7 +26,7 @@ const jogging = "jogging";
 const ERROR_ABOVE_ZERRO = '0 이상이어야 합니다.';
 
 export async function Create(req, res) {
-    const found = await routineData.FindByName(req.body.name);
+    const found = await routineData.GetByName(req.body.name);
     if (found) {
         console.log(
             `RoutineController.Create() : routine name already exist : ${req.body.name}`
@@ -58,7 +58,7 @@ export async function Create(req, res) {
 
 export async function Update(req, res) {
     const id = parseInt(req.params.id);
-    const found = await routineData.FindById(id);
+    const found = await routineData.GetById(id);
     if (!found) {
         return res
             .status(400)
@@ -82,13 +82,12 @@ export async function Update(req, res) {
 
 export async function Delete(req, res) {
     const id = parseInt(req.params.id);
-    const found = await routineData.FindById(id);
+    const found = await routineData.GetById(id);
     if (!found) {
         return res
             .status(400)
             .json({message: '해당 루틴 id가 존재하지 않습니다.'});
     }
-
     await routineData.DeleteById(id);
     res.sendStatus(204);
 }
