@@ -56,6 +56,10 @@
 > > * .env파일에 secret key 및 설정값 저장
 > > * 하드코딩된 secret key값, 설정값 수정
 > #### 09.08 ~ 09.10 : 헬스 루틴 CRUD 구현
+> #### 09.23 : 운동 진행의 GET, POST 구현
+> > * /workout : user의 routine read
+> > * 운동 완료 시 기록한 운동 기록을 diaryData에 append
+> > * TO-DO : SQL & NoSQL 결정 후 DB 설계. 운동 종목에 대한 DB 설계 완료 후 커스텀 운동 기능 추가.
 > #### 프론트엔드 적용
 ------------
 ## 5. 추가 아이디어

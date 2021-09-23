@@ -1,6 +1,4 @@
-import jwt from 'jsonwebtoken';
 import * as routineData from '../data/routine.js';
-import {config} from '../config.js';
 
 export async function GetAllByUserId(req, res) {
     const userId = req.userId;

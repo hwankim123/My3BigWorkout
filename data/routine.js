@@ -79,7 +79,7 @@ export async function Create(routine){
         routine,
         ...routineData
     ];
-    console.log('SignUp Success: ', routineData);
+    console.log('Create Routine Success: ', routineData.name);
 }
 
 export async function UpdateById(id, routine){

@@ -5,6 +5,7 @@ import cors from 'cors';
 import {config} from './config.js';
 import authRouter from './router/auth.js';
 import routineRouter from './router/routine.js';
+import workoutRouter from './router/workout.js';
 
 const app = express();
 const port = config.host.port;
@@ -17,6 +18,7 @@ app.use(cors());
 // router 사용 선언
 app.use('/auth', authRouter);
 app.use('/routine', routineRouter);
+app.use('/workout', workoutRouter);
 
 // 404
 app.use((req, res) => {
