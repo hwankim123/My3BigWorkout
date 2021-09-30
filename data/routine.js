@@ -85,6 +85,7 @@ export async function Create(routine){
 export async function UpdateById(id, routine){
     let found = await GetById(id);
     if(found){
+        found.name = routine.name;
         found.isShared = routine.isShared;
         found.workouts = routine.workouts;
     }

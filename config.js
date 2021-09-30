@@ -7,7 +7,6 @@ function checkConfig(key, defaultValue = undefined){
         const message = `Config Error : ${key} not initialized`;
         throw new Error(message);
     }
-    console.log(`checkConfig(): ${key}: ${value}`);
     return value;
 }
 
@@ -22,4 +21,7 @@ export const config = {
     host: {
         port: parseInt(checkConfig('HOST_PORT', 3000)),
     },
+    mongodb: {
+        host: checkConfig('MONGODB_HOST'),
+    }
 };

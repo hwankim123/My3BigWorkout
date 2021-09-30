@@ -41,6 +41,6 @@ router.post('/login', [
     Validate
 ], authController.Login);
 
-router.post('/me', IsAuth, authController.Me);
+router.get('/me', IsAuth, authController.Me);
 
 export default router;
