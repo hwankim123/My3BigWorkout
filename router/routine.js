@@ -1,6 +1,7 @@
 import express from 'express';
 import {body} from 'express-validator';
 import * as routineController from '../controller/routine.js';
+import * as wolistController from '../controller/wolist.js';
 import {IsAuth} from '../middleware/auth.js';
 import {Validate} from '../middleware/validate.js';
 
@@ -21,6 +22,8 @@ const validateRoutine = [
 ]
 
 router.get('/', IsAuth, routineController.GetAllByUserId);
+
+router.get('/create', IsAuth, wolistController.GetAll);
 
 router.get('/:id', IsAuth, routineController.GetOneById);
 

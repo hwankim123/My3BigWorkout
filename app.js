@@ -7,6 +7,7 @@ import { ConnectMongoose } from './db/database.js';
 import authRouter from './router/auth.js';
 import routineRouter from './router/routine.js';
 import workoutRouter from './router/workout.js';
+import manageRouter from './router/manage.js';
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(cors());
 app.use('/auth', authRouter);
 app.use('/routine', routineRouter);
 app.use('/workout', workoutRouter);
+app.use('/manage', manageRouter);
 
 // 404
 app.use((req, res) => {
