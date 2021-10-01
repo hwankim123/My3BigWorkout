@@ -68,6 +68,7 @@
 > > * wolist : 운동 종류에 대한 DB.
 > > * /manage : 개발자 및 DB 관리자 전용 DB.
 > > > /manage/addworkout : 해당 url으로 wolist DB에 운동 추가
+> > >
 > > > /routine/create : wolist DB를 SELECT ALL 하여 데이터 전송
 > #### 프론트엔드 적용 : 기능 구현 우선. 편의성은 추후 업데이트
 > #### DB 설계 : MongoDB 사용.
