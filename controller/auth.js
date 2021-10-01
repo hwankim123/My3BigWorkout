@@ -1,93 +1,77 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import * as userData from '../data/auth.js'; 
-import * as routineData from '../data/routine.js'; 
+import * as userData from '../data/auth.js';
 import {config} from '../config.js';
-
-const bcryptSaltRounds = config.bcrypt.saltRounds;
 const expiresIn = config.jwt.expiresSec;
 const secret = config.jwt.secretKey;
 
 export async function SignUp(req, res) {
-    const {
-        name,
-        age,
-        username,
-        password,
-        height,
-        weight,
-        bench_1rm,
-        dead_1rm,
-        squat_1rm
-    } = req.body;
-    let found = await userData.FindByUsername(username);
+    let body = req.body;
+
+    // 아이디 중복 체크
+    let found = await userData.FindByUsername(body.username);
     if (found) {
         console.error('/auth/signup: Error: username already exist');
         return res
             .status(409)
             .json({message: '아이디가 이미 존재합니다.'});
     }
-    const hashed = await bcrypt.hash(password, bcryptSaltRounds);
-    const newUser = {
-        id: Date
-            .now()
-            .toString(),
-        name,
-        age,
-        username,
-        password: hashed,
-        height,
-        weight,
-        bench_1rm,
-        dead_1rm,
-        squat_1rm
-    }
-    userData.Create(newUser);
-    const token = createJWT(newUser.id);
+
+    // 비밀번호 encoding, DB에 INSERT, JWT토큰 생성 후 username과 함께 res
+    body.password = await bcrypt.hash(body.password, config.bcrypt.saltRounds);
+    const id = await userData.Create(body);
+    const token = createJWT(id);
+    console.log('SignUp Success : ', id);
     res
         .status(201)
-        .json({token, username});
+        .json({token, username: body.username});
 }
 
-export async function Login(req, res){
+export async function Login(req, res) {
     const {username, password} = req.body;
+
+    // 아이디, 비밀번호 일치 확인
     let user = await userData.FindByUsername(username);
     let found = false;
-    if(user){
+    if (user) {
         const isValidPassword = await bcrypt.compare(password, user.password);
-        if(isValidPassword){
+        if (isValidPassword) {
             found = true;
-        }
-        else{
+        } else {
             console.error("/auth/login: Error: password wrong");
         }
-    }
-    else{
+    } else {
         console.error("/auth/login: Error: username wrong");
     }
 
-    if(!found){
-        return res.status(401).json({message: '아이디 혹은 비밀번호가 잘못되었습니다.'});
-    }
-    else{
+    // 일치 여부에 따라 res
+    if (!found) {
+        return res
+            .status(401)
+            .json({message: '아이디 혹은 비밀번호가 잘못되었습니다.'});
+    } else {
         const token = createJWT(user.id);
         console.log("Login Success / userId : ", user.id);
-        res.status(200).json({token, username});
+        res
+            .status(200)
+            .json({token, username});
     }
 }
 
-function createJWT(id){
-    console.log('createdJWT(): JWT Created!');
-    return jwt.sign({
-        id
-    }, secret, {expiresIn: expiresIn});
-}
-
-export async function Me(req, res){
+export async function Me(req, res) {
     const user = await userData.FindById(req.userId);
-    if(!user){
+    if (!user) {
         console.error('/auth/me(error):', user);
-        return res.status(404).json({message: 'User Not Found'});
+        return res
+            .status(404)
+            .json({message: 'User Not Found'});
     }
-    res.status(200).json({username: user.username});
+    res
+        .status(200)
+        .json({username: user.username});
+}
+
+function createJWT(id) {
+    console.log('createdJWT(): JWT Created!');
+    return jwt.sign({id}, secret, {expiresIn});
 }

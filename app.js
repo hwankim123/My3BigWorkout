@@ -30,7 +30,7 @@ app.use((req, res) => {
 app.use((error, req, res, next) => {
     console.error('async-error : ', error);
     res
-        .send(500)
+        .status(500)
         .json({message: 'Server Error'});
 });
 
