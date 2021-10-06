@@ -1,97 +1,64 @@
-let routineData = [{
-    "id": 1631194854811,
-    "userId": 1631194854811,
-    "name": "테스트",
-    "isShared": false,
-    "workouts": [
-        {
-            "type": "kg_num_sets",
-            "name": "벤치프레스",
-            "setList": [
-                {
-                    "kg": 30,
-                    "num": 10,
-                    "sets": 2,
-                },
-                {
-                    "kg": 35,
-                    "num": 8,
-                    "sets": 2,
-                },
-                {
-                    "kg": 40,
-                    "num": 5,
-                    "sets": 1,
-                },
-            ],
-        },
-        {
-            "type": "num_sets",
-            "name": "턱걸이",
-            "setList": [
-                {
-                    "num": 10,
-                    "sets": 2,
-                },
-                {
-                    "num": 8,
-                    "sets": 2,
-                },
-            ],
-        },
-        {
-            "type": "num",
-            "name": "아무 운동",
-            "setList": [
-                {
-                    "num": 15,
-                },
-            ],
-        },
-        {
-            "type": "time",
-            "name": "플랭크",
-            "time": 30,
-        },
-        {
-            "type": "jogging",
-            "name": "조깅",
-            "time": 10,
-            "km_per_h": 8.7,
-        },
-    ],
-}];
+import Mongoose from 'mongoose';
+import * as authData from './auth.js';
+import { ConvertId } from '../db/database.js';
+const Schema = Mongoose.Schema;
 
-export async function GetById(id){
-    return routineData.find(routine => routine.id === id);
+const routineSchema = new Schema({
+    userId: {type: Schema.Types.ObjectId, ref: 'User'},
+    name: {type: String, required: true},
+    isShared: {type: Boolean, required: true},
+    workouts: {type: [Schema.Types.Mixed], required: true},
+}, {timestamps: true});
+const Routine = Mongoose.model('Routine', routineSchema);
+
+export async function FindById(id) {
+    return Routine.findById({_id: new Mongoose.Types.ObjectId(id)});
 }
 
-export async function GetByName(name){
-    return routineData.find(routine => routine.name === name);
+// 일단 default parameter로 한번 해봄. 
+// 나아아중에 루틴 게시판 기능 추가할때 
+// 루틴 이름으로 검색 기능 추가했을 때 userId 값은 안넘겨주는 식으로 활용하게
+export async function FindByName(userId = undefined, name) {
+    return Routine.findOne({userId, name});
 }
 
-export async function GetByUserId(userId){
-    return routineData.filter(routine => routine.userId === userId);
+export async function FindByUserId(userId) {
+    return Routine.find({userId});
 }
 
-export async function Create(routine){
-    routineData = [
-        routine,
-        ...routineData
-    ];
-    console.log('Create Routine Success: ', routineData.name);
+export async function Create(userId, newRoutine) {
+    return new Routine({
+        userId: new ConvertId(userId),
+        ...newRoutine
+    }).save().then(routine => {
+        console.log("routine Created : ", routine._id);
+        return authData.UpdateRoutine(routine.userId, routine._id);
+    });
 }
 
-export async function UpdateById(id, routine){
-    let found = await GetById(id);
-    if(found){
-        found.name = routine.name;
-        found.isShared = routine.isShared;
-        found.workouts = routine.workouts;
+export async function UpdateById(id, routine) {
+    const {name, isShared, workouts} = routine;
+    const found = await FindById(id);
+    if (found) {
+        return Routine.updateOne({ 
+            _id: ConvertId(id)
+        }, {
+            name,
+            isShared,
+            workouts
+        }).then(() => {
+            return FindById(id)
+        });
     }
     return found;
 }
 
-export async function DeleteById(id){
-    routineData = routineData.filter(t => t.id !== id);
+export async function DeleteById(id) {
+    return Routine.findOneAndDelete({
+        _id: ConvertId(id)
+    }).then((routine) => {
+        authData.DeleteRoutine(routine.userId, routine._id).then((data) => {
+            console.log(data);
+        });
+    });
 }

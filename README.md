@@ -63,12 +63,15 @@
 > > * 헬스 루틴 수정 로직에서 루틴의 이름 변경 기능 추가
 > > * 선택한 DB : MongoDB.
 > > * 운동 기록 방식이 운동 종류에 따라 상이하기 때문에 Schema가 정해지지 않은 NoSQL 사용
-> > * Users, Workouts, Routines, Diaries 총 4 가지의 
-> #### 10.01 : /auth DB 적용, wolist DB 적용, /manage url 추가, /routine/create url 추가
+> > * Users, Workouts, Routines, Diaries 총 4 가지의 Collection 생성
+> #### 10.01 : /auth에 DB 적용, wolist DB 적용, /manage url 추가, /routine/create url 추가
 > > * wolist : 운동 종류에 대한 DB.
 > > * /manage : 개발자 및 DB 관리자 전용 DB.
 > > * /manage/addworkout : 해당 url으로 wolist DB에 운동 추가
 > > * /routine/create : wolist DB를 SELECT ALL 하여 데이터 전송
+> #### 10.05 : /routine의 create와 update 로직 수정, /routine에 DB 적용
+> > *  user와 routine DB는 1:N 관계. 추후에 헬스 루틴 공유 기능을 고려하여 child referencing
+> #### 10.06 : routine의 CRUD 구현
 > #### 프론트엔드 적용 : 기능 구현 우선. 편의성은 추후 업데이트
 > #### DB 설계 : MongoDB 사용.
 > #### 운동 진행 기능 추가 : 운동 DB 설계 완료 후 커스텀 운동 기능 추가.

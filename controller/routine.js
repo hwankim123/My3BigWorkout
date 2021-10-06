@@ -2,29 +2,21 @@ import * as routineData from '../data/routine.js';
 
 export async function GetAllByUserId(req, res) {
     const userId = req.userId;
-    const data = await routineData.GetByUserId(userId);
+    const data = await routineData.FindByUserId(userId);
     res
         .status(200)
         .json(data);
 }
 
 export async function GetOneById(req, res) {
-    const id = parseInt(req.params.id);
-    const data = await routineData.GetById(id);
+    const data = await routineData.FindById(req.params.id);
     res
         .status(200)
         .json(data);
 }
 
-const kg_num_sets = "kg_num_sets";
-const num_sets = "num_sets";
-const num = "num";
-const time = "time";
-const jogging = "jogging";
-const ERROR_ABOVE_ZERRO = '0 이상이어야 합니다.';
-
 export async function Create(req, res) {
-    const found = await routineData.GetByName(req.body.name);
+    const found = await routineData.FindByName(req.userId, req.body.name);
     if (found) {
         console.log(
             `RoutineController.Create() : routine name already exist : ${req.body.name}`
@@ -36,42 +28,32 @@ export async function Create(req, res) {
 
     const workouts = req.body.workouts;
     const {index, message} = ValidateWorkouts(workouts);
-    console.log(index, message);
-    if (index) {
+    if (index >= 0) {
         return res
             .status(400)
-            .json({index: index, message: message});
+            .json({index, message});
     }
-
-    const newRoutine = {
-        id: Date.now(),
-        userId: req.userId,
-        ...req.body
-    };
-    await routineData.Create(newRoutine);
+    await routineData.Create(req.userId, req.body);
     res
         .status(201)
-        .json({message, data: newRoutine});
+        .json({message, data: req.body});
 }
 
 export async function Update(req, res) {
-    const id = parseInt(req.params.id);
-    const found = await routineData.GetById(id);
-    if (!found) {
+    const workouts = req.body.workouts;
+    const {index, message} = ValidateWorkouts(workouts);
+    if (index >= 0) {
+        return res
+            .status(400)
+            .json({index, message});
+    }
+
+    const data = await routineData.UpdateById(req.params.id, req.body);
+    if(!data){
         return res
             .status(400)
             .json({message: '해당 루틴 id가 존재하지 않습니다.'});
     }
-
-    const workouts = req.body.workouts;
-    const {index, message} = ValidateWorkouts(workouts);
-    if (index) {
-        return res
-            .status(400)
-            .json({index: index, message: message});
-    }
-
-    const data = await routineData.UpdateById(id, req.body);
     res
         .status(200)
         .json({message, data});
@@ -79,38 +61,36 @@ export async function Update(req, res) {
 }
 
 export async function Delete(req, res) {
-    const id = parseInt(req.params.id);
-    const found = await routineData.GetById(id);
+    const found = await routineData.FindById(req.params.id);
     if (!found) {
         return res
             .status(400)
             .json({message: '해당 루틴 id가 존재하지 않습니다.'});
     }
-    await routineData.DeleteById(id);
+    await routineData.DeleteById(req.params.id);
     res.sendStatus(204);
 }
 
+export async function Res(req, res){
+    res.status(200).json(req.body);
+}
 
 // 내부 함수들
+
+const ERROR_ABOVE_ZERRO = '0 이상이어야 합니다.';
 
 function ValidateWorkouts(workouts) {
     for (let i = 0; i < workouts.length; i++) {
         const workout = workouts[i];
         const type = workout.type;
         switch (type) {
-            case kg_num_sets:
-            case num_sets:
-            case num:
+            case "default":
+            case "맨몸운동":
                 if (!CheckSets(type, workout.setList)) {
                     return {index: i, message: ERROR_ABOVE_ZERRO};
                 }
                 break;
-            case time:
-                if (workout.time <= 0) {
-                    return {index: i, message: ERROR_ABOVE_ZERRO};
-                }
-                break;
-            case jogging:
+            case "유산소":
                 if (workout.time <= 0) {
                     return {index: i, message: ERROR_ABOVE_ZERRO};
                 }
@@ -122,7 +102,7 @@ function ValidateWorkouts(workouts) {
                 return {index: i, message: '잘못된 운동 유형입니다.'};
         }
     }
-    return {index: undefined, message: 'success'};
+    return {index: -1, message: 'success'};
 }
 
 function CheckSets(type, sets) {
@@ -131,16 +111,12 @@ function CheckSets(type, sets) {
     }
     for (let i = 0; i < sets.length; i++) {
         switch (type) {
-            case num:
-                if (sets[i].num <= 0) 
+            case "default":
+                if (sets[i].num <= 0 || sets[i].sets <= 0 || sets[i].kg <= 0) 
                     return false;
                 break;
-            case num_sets:
-                if (sets[i].sets <= 0) 
-                    return false;
-                break;
-            case kg_num_sets:
-                if (sets[i].kg <= 0) 
+            case "맨몸운동":
+                if (sets[i].num <= 0 || sets[i].sets <= 0) 
                     return false;
                 break;
         }

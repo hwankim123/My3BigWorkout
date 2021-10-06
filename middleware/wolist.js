@@ -1,8 +1,11 @@
 import * as wolistData from '../data/wolist.js';
 
-export async function GetAll(req, res) {
+export async function GetAllWorkout(req, res, next) {
     const data = await wolistData.FindAll();
-    let result = {
+    req.body = {
+        routine: {
+            ...req.body,
+        },
         back: [],
         chest: [],
         lowerBody: [],
@@ -11,34 +14,31 @@ export async function GetAll(req, res) {
         fullBody: [],
         walkJogging: [],
     };
-    console.log(result);
     data.forEach((workout) => {
         if(workout.type === "default"){
             switch(workout.agonist){
                 case "등":
-                    result.back.push(workout);
+                    req.body.back.push(workout);
                     break;
                 case "가슴":
-                    result.chest.push(workout);
+                    req.body.chest.push(workout);
                     break;
                 case "하체":
-                    result.lowerBody.push(workout);
+                    req.body.lowerBody.push(workout);
                     break;
                 case "어깨":
-                    result.shoulder.push(workout);
+                    req.body.shoulder.push(workout);
                     break;
                 case "팔":
-                    result.arm.push(workout);
+                    req.body.arm.push(workout);
                     break;
             }
         } else if(workout.type === "맨몸운동"){
-            result.fullBody.push(workout);
+            req.body.fullBody.push(workout);
         } else if(workout.type === "유산소"){
-            result.walkJogging.push(workout);
+            req.body.walkJogging.push(workout);
         }
     });
-    console.log(result);
-    res
-        .status(200)
-        .json(result);
+    console.log(req.body);
+    next();
 }
