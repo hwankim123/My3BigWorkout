@@ -30,35 +30,28 @@ export async function Create(userId, newRoutine) {
     return new Routine({
         userId: new ConvertId(userId),
         ...newRoutine
-    }).save().then(routine => {
-        console.log("routine Created : ", routine._id);
-        return authData.UpdateRoutine(routine.userId, routine._id);
+    }).save().then((routine) => {
+        authData.UpdateRoutine(routine.userId, routine._id);
+        return routine;
     });
+
 }
 
 export async function UpdateById(id, routine) {
-    const {name, isShared, workouts} = routine;
-    const found = await FindById(id);
-    if (found) {
-        return Routine.updateOne({ 
-            _id: ConvertId(id)
-        }, {
-            name,
-            isShared,
-            workouts
-        }).then(() => {
-            return FindById(id)
-        });
-    }
-    return found;
+    return Routine.findByIdAndUpdate({
+        _id: ConvertId(id)
+    }, {
+        name: routine.name,
+        isShared: routine.isShared,
+        workouts: routine.workouts
+    }, {returnOriginal: false});
 }
 
 export async function DeleteById(id) {
     return Routine.findOneAndDelete({
         _id: ConvertId(id)
     }).then((routine) => {
-        authData.DeleteRoutine(routine.userId, routine._id).then((data) => {
-            console.log(data);
-        });
+        if(routine === null) return routine;
+        return authData.DeleteRoutine(routine.userId, routine._id);
     });
 }

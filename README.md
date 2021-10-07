@@ -71,7 +71,7 @@
 > > * /routine/create : wolist DB를 SELECT ALL 하여 데이터 전송
 > #### 10.05 : /routine의 create와 update 로직 수정, /routine에 DB 적용
 > > *  user와 routine DB는 1:N 관계. 추후에 헬스 루틴 공유 기능을 고려하여 child referencing
-> #### 10.06 : routine의 CRUD 구현
+> #### 10.06 ~ 10.07 : routine의 CRUD 구현
 > #### 프론트엔드 적용 : 기능 구현 우선. 편의성은 추후 업데이트
 > #### DB 설계 : MongoDB 사용.
 > #### 운동 진행 기능 추가 : 운동 DB 설계 완료 후 커스텀 운동 기능 추가.
