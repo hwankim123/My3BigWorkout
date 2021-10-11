@@ -1,6 +1,6 @@
 import Mongoose from 'mongoose';
-import * as authData from './auth.js';
-import { ConvertId } from '../db/database.js';
+import { CreateRef_id, DeleteRef_id } from './auth.js';
+import { ConvertId, SetVirtualId } from '../db/database.js';
 const Schema = Mongoose.Schema;
 
 const routineSchema = new Schema({
@@ -9,10 +9,11 @@ const routineSchema = new Schema({
     isShared: {type: Boolean, required: true},
     workouts: {type: [Schema.Types.Mixed], required: true},
 }, {timestamps: true});
+SetVirtualId(routineSchema);
 const Routine = Mongoose.model('Routine', routineSchema);
 
 export async function FindById(id) {
-    return Routine.findById({_id: new Mongoose.Types.ObjectId(id)});
+    return Routine.findById({_id: ConvertId(id)});
 }
 
 // 일단 default parameter로 한번 해봄. 
@@ -23,18 +24,17 @@ export async function FindByName(userId = undefined, name) {
 }
 
 export async function FindByUserId(userId) {
-    return Routine.find({userId});
+    return Routine.find({userId: ConvertId(userId)});
 }
 
 export async function Create(userId, newRoutine) {
     return new Routine({
-        userId: new ConvertId(userId),
+        userId: ConvertId(userId),
         ...newRoutine
     }).save().then((routine) => {
-        authData.UpdateRoutine(routine.userId, routine._id);
+        CreateRef_id(routine.userId, routine._id, 'routines');
         return routine;
     });
-
 }
 
 export async function UpdateById(id, routine) {
@@ -52,6 +52,6 @@ export async function DeleteById(id) {
         _id: ConvertId(id)
     }).then((routine) => {
         if(routine === null) return routine;
-        return authData.DeleteRoutine(routine.userId, routine._id);
+        return DeleteRef_id(routine.userId, routine._id, 'routines');
     });
 }

@@ -1,75 +1,58 @@
-// TO-DO : Javascript의 시간 format에 호환되게 postman 및 data/workout.js 수정
-let diaryData = [
-    {
-        "id": 1631194854811,
-        "userId": 1631194854811,
-        "routineName": "테스트",
-        "startAt" : "Sep 23, 21 00:20:18",
-        "duration" : "00:52:35",
-        "workouts": [
-            {
-                "type": "kg_num_sets",
-                "name": "벤치프레스",
-                "setList": [
-                    {
-                        "kg": 30,
-                        "num": 10,
-                        "sets": 2
-                    },
-                    {
-                        "kg": 35,
-                        "num": 8,
-                        "sets": 2
-                    },
-                    {
-                        "kg": 40,
-                        "num": 5,
-                        "sets": 1
-                    }
-                ]
-            },
-            {
-                "type": "num_sets",
-                "name": "턱걸이",
-                "setList": [
-                    {
-                        "num": 10,
-                        "sets": 2
-                    },
-                    {
-                        "num": 8,
-                        "sets": 2
-                    }
-                ]
-            },
-            {
-                "type": "num",
-                "name": "아무 운동",
-                "setList": [
-                    {
-                        "num": 4
-                    }
-                ]
-            },
-            {
-                "type": "time",
-                "name": "플랭크",
-                "time": 30
-            },
-            {
-                "type": "jogging",
-                "name": "조깅",
-                "time": 10,
-                "km_per_h": 8.7
-            }
-        ]
-    }
-];
+import Mongoose from 'mongoose';
+import { CreateRef_id, DeleteRef_id } from './auth.js';
+import { ConvertId, SetVirtualId } from '../db/database.js';
+import { config } from '../config.js';
+const Schema = Mongoose.Schema;
+const timezone = config.timezone;
 
-export async function Create(diary){
-    diaryData = [
-        diary,
-        ...diaryData
-    ];
-    console.log('Diary Create Success: ', diaryData);
+const diarySchema = new Schema({
+    userId: {type: Schema.Types.ObjectId, ref: 'User'},
+    routineName: {type: String, required: true},
+    startAt: {type: Date, required: true},
+    endAt: {type: Date, required: true},
+    workouts: {type: [Schema.Types.Mixed], required: true}
+}, {timestamps: true});
+SetVirtualId(diarySchema);
+const Diary = Mongoose.model('Diary', diarySchema);
+
+export async function FindByDate(userId, year, month, date){
+    let set = {};
+    if(!date){
+        set = SetTime(year, month);
+    } else{
+        set = SetDate(year, month, date);
+    }
+
+    return Diary.find({
+        userId: ConvertId(userId),
+        startAt: {$gte: set.start, $lt: set.end} 
+    }).sort({startAt: 1});
+}
+
+function SetTime(year, month){
+    const monthStart = new Date(year, month, 1);
+    
+    year = (month + 1 == 12) ? year + 1 : year;
+    const monthEnd = new Date(year, (month + 1) % 12, 1);
+
+    return {start: monthStart, end: monthEnd};
+}
+function SetDate(year, month, date){
+    const dateStart = new Date(year, month, date);
+
+    const endDate = new Date(year, month + 1, 0);
+    month = (date + 1 === endDate) ? month + 1 : month;
+    year = (month  === 12) ? year + 1 : year;
+    const dateEnd = new Date(year, month, (date + 1) % endDate);
+
+    return {start: dateStart, end: dateEnd};
+}
+
+export async function Create(userId, newDiary){
+    new Diary({
+        userId: ConvertId(userId),
+        ...newDiary
+    }).save().then((diary) => {
+        CreateRef_id(userId, diary._id, 'diaries');
+    });
 }

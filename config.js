@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import { check } from 'express-validator';
 dotenv.config();
 
 function checkConfig(key, defaultValue = undefined){
@@ -23,5 +24,6 @@ export const config = {
     },
     mongodb: {
         host: checkConfig('MONGODB_HOST'),
-    }
+    },
+    timezone: checkConfig('KOREA_TIMEZONE', 9),
 };

@@ -13,11 +13,12 @@ const userSchema = new Schema({
     dead_1rm: {type: Number, default: 0},
     squat_1rm: {type: Number, default: 0},
     routines: [{type: Schema.Types.ObjectId, ref: 'Routine'}],
+    diaries: [{type: Schema.Types.ObjectId, ref: 'Diary'}],
 }, {timestamps: true});
 const User = Mongoose.model('User', userSchema);
 
-export async function Create(user){
-    return new User(user).save().then((u) => u.id);
+export async function Create(newUser){
+    return new User(newUser).save().then(user => user.id);
 }
 
 export async function FindByUsername(username){
@@ -30,14 +31,23 @@ export async function FindById(id){
     });
 }
 
-export async function UpdateRoutine(id, routineId) {
-    return User.updateOne({
-        _id: ConvertId(id)
-    }, {$push: {routines: routineId }});
+function checkRef(ref_id, ref){
+    switch(ref){
+        case 'routines':
+            return {routines: ref_id};
+        case 'diaries':
+            return {diaries: ref_id};
+    }
 }
 
-export async function DeleteRoutine(id, routineId){
+export async function CreateRef_id(id, ref_id, ref){
     return User.updateOne({
         _id: ConvertId(id),
-    }, {$pull: {routines: routineId}});
+    }, {$push: checkRef(ref_id, ref)});
+}
+
+export async function DeleteRef_id(id, ref_id, ref){
+    return User.updateOne({
+        _id: ConvertId(id),
+    }, {$pull: checkRef(ref_id, ref)});
 }

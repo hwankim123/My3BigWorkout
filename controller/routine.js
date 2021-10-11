@@ -1,6 +1,6 @@
 import * as routineData from '../data/routine.js';
 
-export async function GetAllByUserId(req, res) { // --> find 로 이름 바꾸기
+export async function GetAllByUserId(req, res) {
     const userId = req.userId;
     const data = await routineData.FindByUserId(userId);
     res
@@ -8,7 +8,7 @@ export async function GetAllByUserId(req, res) { // --> find 로 이름 바꾸�
         .json(data);
 }
 
-export async function GetOneById(req, res) { // --> find 로 이름 바꾸기
+export async function GetOneById(req, res) {
     const data = await routineData.FindById(req.params.id);
     res
         .status(200)

@@ -1,14 +1,12 @@
 import Mongoose from 'mongoose';
+import { SetVirtualId } from '../db/database.js';
 
-// Schema
 const wolistSchema = new Mongoose.Schema({
     name: {type: String, required: true},
     type: {type: String, required: true},
     agonist: {type: String}
 });
-
-// Model(Collection)
-
+SetVirtualId(wolistSchema);
 const Wolist = Mongoose.model('Wolist', wolistSchema);
 
 export async function Create(wolist){

@@ -8,6 +8,7 @@ import authRouter from './router/auth.js';
 import routineRouter from './router/routine.js';
 import workoutRouter from './router/workout.js';
 import manageRouter from './router/manage.js';
+import diaryRouter from './router/diary.js';
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use('/auth', authRouter);
 app.use('/routine', routineRouter);
 app.use('/workout', workoutRouter);
 app.use('/manage', manageRouter);
+app.use('/diary', diaryRouter);
 
 // 404
 app.use((req, res) => {

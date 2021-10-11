@@ -29,7 +29,7 @@ export async function IsAuth(req, res, next) {
                 .status(401)
                 .json({AUTH_ERROR});
         }
-        const user = userData.FindById(decoded.id);
+        const user = await userData.FindById(decoded.id);
         // 등록된 사용자가 아닌 경우
         if (!user) {
             console.error('IsAuth(): user not found');
@@ -38,7 +38,7 @@ export async function IsAuth(req, res, next) {
                 .json({AUTH_ERROR});
         }
         req.userId = decoded.id;
-        console.log('IsAuth(): User Id:', decoded.id);
+        console.log('IsAuth(): ', user.username);
         next();
     });
 }

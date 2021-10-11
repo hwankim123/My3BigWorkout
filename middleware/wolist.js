@@ -3,8 +3,10 @@ import * as wolistData from '../data/wolist.js';
 export async function GetAllWorkout(req, res, next) {
     const data = await wolistData.FindAll();
     req.body = {
-        routine: {
-            ...req.body,
+        routines: {
+            // Create 페이지인 경우 req.body에 routine 정보가 없음
+            // Update 페이지인 경우 req.body에 수정하고자 하는 routine 정보가 있음
+            ...req.body, 
         },
         back: [],
         chest: [],
