@@ -26,13 +26,13 @@ app.use('/diary', diaryRouter);
 
 // 404
 app.use((req, res) => {
-    console.error('잘못된 경로. 404 Not Found');
+    console.error('\n');
     res.sendStatus(404);
 });
 
 // 500. Server Error
 app.use((error, req, res, next) => {
-    console.error('async-error : ', error);
+    console.error('\nasync-error : ', error);
     res
         .status(500)
         .json({message: 'Server Error'});
@@ -42,6 +42,6 @@ app.use((error, req, res, next) => {
 ConnectMongoose().then(() => {
     console.log('mongoose init');
     app.listen(config.host.port, () => {
-        console.log(`listening port : ${config.host.port}`);
+        console.log(`listening port : ${config.host.port}`, "package.json에서 nodemon 삭제해주세요~, config.js 수정해주세요~ 이 로그도 삭제해주세요~");
     });
 });

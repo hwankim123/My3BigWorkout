@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-import { check } from 'express-validator';
 dotenv.config();
 
 function checkConfig(key, defaultValue = undefined){
@@ -13,7 +12,8 @@ function checkConfig(key, defaultValue = undefined){
 
 export const config = {
     jwt: {
-        secretKey: checkConfig('JWT_SRCRET_KEY'),
+        // 노트북에는 .env 파일이 없어서 임시로 넣음!
+        secretKey: checkConfig('JWT_SRCRET_KEY', 'HG9Mi875dLFrPzmtwVUEAFRuImzivPVg'),
         expiresSec: parseInt(checkConfig('JWT_EXPIRES_SEC', 21600)),
     },
     bcrypt: {
@@ -23,7 +23,8 @@ export const config = {
         port: parseInt(checkConfig('HOST_PORT', 3000)),
     },
     mongodb: {
-        host: checkConfig('MONGODB_HOST'),
+        // 노트북에는 .env 파일이 없어서 임시로 넣음!
+        host: checkConfig('MONGODB_HOST', 'mongodb+srv://hwankim123_notebook_langstudycafe:cjsak123@cluster0.utxd9.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'),
     },
     timezone: checkConfig('KOREA_TIMEZONE', 9),
 };

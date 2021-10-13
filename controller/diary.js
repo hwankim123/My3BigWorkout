@@ -10,3 +10,7 @@ export async function GetByMonth(req, res){
     })
     res.status(200).json(data);
 }
+
+export async function GetAllWorkout(req, res){
+    res.status(200).json(req.body);
+}
