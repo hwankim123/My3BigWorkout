@@ -14,7 +14,7 @@ const diarySchema = new Schema({
         workoutType: {type: String, required: true},
         name: {type: String, required: true},
         performance: {type: Schema.Types.Mixed, required: true},
-    }],
+    }, { id: false }],
 });
 SetVirtualId(diarySchema);
 const Diary = Mongoose.model('Diary', diarySchema);
@@ -59,7 +59,7 @@ export async function FindByWorkoutName(userId, name){
     return Diary.find({
         userId: ConvertId(userId),
         'workouts.name': name,
-    }).sort({startAt: 1});
+    }, 'startAt workouts.name workouts.performance', {sort: {startAt: 1}});
 }
 
 export async function Create(userId, newDiary){

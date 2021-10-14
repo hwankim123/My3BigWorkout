@@ -22,6 +22,12 @@ export async function Index(req, res, next){
 }
 
 export async function GetByWorkoutName(req, res){
-    const data = await diaryData.FindByWorkoutName(req.userId, req.query.name);
+    const name = req.query.name;
+    let data = await diaryData.FindByWorkoutName(req.userId, name);
+    data.forEach((diary) => {
+        diary.workouts = diary.workouts.filter((workout) => {
+            return workout.name === name;
+        });
+    });
     res.status(200).json(data);
 }

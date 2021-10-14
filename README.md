@@ -64,11 +64,13 @@
 > #### 10.10 ~ 10.11 : Diary DB 적용, 운동 일지의 날짜별 GET 구현
 > #### 10.12 ~ 10.14: /diary의 query validate 구현, 운동 일지의 운동별 GET 구현
 > > * 날짜 범위에 맞도록 validate
-> > * 운동별 GET의 경우 해당 운동이 포함된 "날짜의 운동 일지 전부"를 GET해옴. ※ To-Do : 전체 Document를 Select하는게 아닌 일부만 Select
-> #### url Rest API에 맞게 리팩토링
-> > * 동사는 빼고 http Method 활용
-> > * 명사는 collection의 경우 복수, 혹은 고유명사 
-> > * 특정 조견의 경우 query or param이용
+> #### 전체 코드 리팩토링
+> > * url Rest API에 맞게 리팩토링
+> > > 동사는 빼고 http Method 활용
+> > > 명사는 collection의 경우 복수, 혹은 고유명사 
+> > > 특정 조견의 경우 query or param이용
+> > * DB 결과 data 가공해서 response
+> #### url에 한글 적히는거 불편함. wolist도 diary와 ref 관계 설정해서 id값으로 query 설정하도록 수정
 > #### auth에서 controller로 넘어간 validate 이거 router 쪽으로 옮길 수 있을듯(custom validator)
 > #### auth 에서 custom validator까지 구현했으면, 만들었던 custom validator들 다 middleware/validator.js로 옮겨
 > #### 운동 진행 기능 추가 : 운동 DB 설계 완료 후 커스텀 운동 기능 추가.

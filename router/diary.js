@@ -7,14 +7,14 @@ import { Validate } from '../middleware/validate.js';
 
 const router = express.Router();
 
-// middleware/validate.js로 옮겨질 예졍
 const minYear = 2000;
 const maxYear = new Date().getFullYear();
+
 const checkDate = (value, {req}) => {
     if(value === undefined) return true;
     return value >= 1 && value <= new Date(req.query.year, req.query.month, -1).getDate();
 }
-///////////////////////////////////////
+
 const ValidateFullDate = [
     query('year')
     .notEmpty()
