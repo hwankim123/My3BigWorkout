@@ -36,8 +36,7 @@ router.get('/', IsAuth, [
     Validate
 ], diaryController.GetByDate);
 
-router.get('/workout', IsAuth, GetAllWorkout, diaryController.Res, diaryController.GetByWorkoutName);
-
-//router.get('/workout', IsAuth);
+router.get('/workout', IsAuth, GetAllWorkout
+, diaryController.Index, diaryController.GetByWorkoutName);
 
 export default router;

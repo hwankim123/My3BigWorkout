@@ -12,7 +12,7 @@ export async function GetByDate(req, res){
 }
 
 
-export async function Res(req, res, next){
+export async function Index(req, res, next){
     if(!req.query.name){
         return res.status(200).json(req.body);
     }
