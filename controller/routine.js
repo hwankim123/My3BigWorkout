@@ -55,6 +55,7 @@ export async function Update(req, res) {
 
     // Update with _id check
     const data = await routineData.UpdateById(req.params.id, req.body);
+    console.log(data);
     if(data === null){
         return res
             .status(400)
@@ -88,19 +89,20 @@ const ERROR_ABOVE_ZERRO = '0 이상이어야 합니다.';
 function ValidateWorkouts(workouts) {
     for (let i = 0; i < workouts.length; i++) {
         const workout = workouts[i];
-        const type = workout.type;
+        const type = workout.workoutType;
         switch (type) {
             case "default":
             case "맨몸운동":
-                if (!CheckSets(type, workout.setList)) {
+                if (!CheckSets(type, workout.performance)) {
                     return {index: i, message: ERROR_ABOVE_ZERRO};
                 }
                 break;
             case "유산소":
-                if (workout.time <= 0) {
+                const {sec, km} = workout.performance;
+                if (sec <= 0) {
                     return {index: i, message: ERROR_ABOVE_ZERRO};
                 }
-                if (workout.km_per_h <= 0) {
+                if (km <= 0) {
                     return {index: i, message: ERROR_ABOVE_ZERRO};
                 }
                 break;
@@ -111,18 +113,18 @@ function ValidateWorkouts(workouts) {
     return {index: -1, message: 'success'};
 }
 
-function CheckSets(type, sets) {
-    if (sets.length === 0) {
+function CheckSets(type, perf) {
+    if (perf.length === 0) {
         return false;
     }
-    for (let i = 0; i < sets.length; i++) {
+    for (let i = 0; i < perf.length; i++) {
         switch (type) {
             case "default":
-                if (sets[i].num <= 0 || sets[i].sets <= 0 || sets[i].kg <= 0) 
+                if (perf[i].num <= 0 || perf[i].sets <= 0 || perf[i].kg <= 0) 
                     return false;
                 break;
             case "맨몸운동":
-                if (sets[i].num <= 0 || sets[i].sets <= 0) 
+                if (perf[i].num <= 0 || perf[i].sets <= 0) 
                     return false;
                 break;
         }

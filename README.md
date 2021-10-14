@@ -43,7 +43,7 @@
 > > * jwt, bcrypt 라이브러리 추가, request - response 정상 동작 확인 후 MVC 패턴에 맞게 리팩토링
 > #### 09.02 : 로그인 및 로그인 인증 기능 구현
 > #### 09.08 : 보안, 설정값 처리
-> > * dotenv, cors 라이브러리 추가.  ※ cors는 아직 어디서 어떻게 적용되는지 모름. 공부 필요
+> > * dotenv, cors 라이브러리 추가.  ※ To-Do : cors는 아직 어디서 어떻게 적용되는지 모름. 공부 필요
 > > * .env파일에 secret key 및 설정값 저장
 > #### 09.08 ~ 09.10 : 헬스 루틴 CRUD 구현
 > #### 09.23 : 운동 진행의 GET, POST 구현
@@ -55,15 +55,16 @@
 > #### 10.01 : User DB 적용
 > #### 10.01 : Wolist DB 적용, /manage url 추가
 > > * wolist : 운동 종류에 대한 DB.
-> > * /manage : 개발자 및 DB 관리자 전용 url.  ※ 관리자에 대한 authentication 추가 필요.
+> > * /manage : 개발자 및 DB 관리자 전용 url.  ※ To-Do : 관리자에 대한 authentication 추가 필요.
 > > * /manage/addworkout : 해당 url으로 wolist DB에 운동 추가.
 > #### 10.01 : 헬스 루틴의 Create 수정
 > > * /routine/create : wolist DB를 Find ALL 하여 데이터 전송.
 > #### 10.05 : Routine DB 적용(CREATE, UPDATE)
 > #### 10.06 ~ 10.07 : Routine DB 적용(READ, DELETE) 및 리팩토링
 > #### 10.10 ~ 10.11 : Diary DB 적용, 운동 일지의 날짜별 GET 구현
-> #### 10.12 : /diary의 query validate 구현, 운동 일지의 운동별 GET 구현
+> #### 10.12 ~ 10.14: /diary의 query validate 구현, 운동 일지의 운동별 GET 구현
 > > * 날짜 범위에 맞도록 validate
+> > * 운동별 GET의 경우 해당 운동이 포함된 "날짜의 운동 일지 전부"를 GET해옴. ※ To-Do : 전체 Document를 Select하는게 아닌 일부만 Select
 > #### url Rest API에 맞게 리팩토링
 > > * 동사는 빼고 http Method 활용
 > > * 명사는 collection의 경우 복수, 혹은 고유명사 

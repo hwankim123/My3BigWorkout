@@ -24,7 +24,7 @@ export const config = {
     },
     mongodb: {
         // 노트북에는 .env 파일이 없어서 임시로 넣음!
-        host: checkConfig('MONGODB_HOST', 'mongodb+srv://hwankim123_notebook_langstudycafe:cjsak123@cluster0.utxd9.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'),
+        host: checkConfig('MONGODB_HOST', 'mongodb+srv://hwankim123:cjsak123@cluster0.utxd9.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'),
     },
     timezone: checkConfig('KOREA_TIMEZONE', 9),
 };

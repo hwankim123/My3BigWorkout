@@ -10,17 +10,22 @@ const diarySchema = new Schema({
     routineName: {type: String, required: true},
     startAt: {type: Date, required: true},
     endAt: {type: Date, required: true},
-    workouts: {type: [Schema.Types.Mixed], required: true}
-}, {timestamps: true});
+    workouts: [{
+        workoutType: {type: String, required: true},
+        name: {type: String, required: true},
+        performance: {type: Schema.Types.Mixed, required: true},
+    }],
+});
 SetVirtualId(diarySchema);
 const Diary = Mongoose.model('Diary', diarySchema);
 
 export async function FindByDate(userId, year, month, date){
     let set = {};
     if(!date){
-        set = SetTime(year, month);
+        set = SetMonth(year, month);
     } else{
         set = SetDate(year, month, date);
+        console.log(`/data/diary.js FindByDate() : ${set.start} ~ ${set.end}`);
     }
 
     return Diary.find({
@@ -29,7 +34,7 @@ export async function FindByDate(userId, year, month, date){
     }).sort({startAt: 1});
 }
 
-function SetTime(year, month){
+function SetMonth(year, month){
     const monthStart = new Date(year, month, 1);
     
     year = (month + 1 == 12) ? year + 1 : year;
@@ -37,6 +42,7 @@ function SetTime(year, month){
 
     return {start: monthStart, end: monthEnd};
 }
+
 function SetDate(year, month, date){
     const dateStart = new Date(year, month, date);
 
@@ -46,6 +52,14 @@ function SetDate(year, month, date){
     const dateEnd = new Date(year, month, (date + 1) % endDate);
 
     return {start: dateStart, end: dateEnd};
+}
+
+
+export async function FindByWorkoutName(userId, name){
+    return Diary.find({
+        userId: ConvertId(userId),
+        'workouts.name': name,
+    }).sort({startAt: 1});
 }
 
 export async function Create(userId, newDiary){

@@ -14,7 +14,7 @@ const userSchema = new Schema({
     squat_1rm: {type: Number, default: 0},
     routines: [{type: Schema.Types.ObjectId, ref: 'Routine'}],
     diaries: [{type: Schema.Types.ObjectId, ref: 'Diary'}],
-}, {timestamps: true});
+});
 const User = Mongoose.model('User', userSchema);
 
 export async function Create(newUser){

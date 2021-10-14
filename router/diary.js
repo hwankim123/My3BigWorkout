@@ -11,12 +11,8 @@ const router = express.Router();
 const minYear = 2000;
 const maxYear = new Date().getFullYear();
 const checkDate = (value, {req}) => {
+    if(value === undefined) return true;
     return value >= 1 && value <= new Date(req.query.year, req.query.month, -1).getDate();
-}
-const checkWorkout = (value) => {
-    // custom validation 필요 없음 삭제
-    console.log(typeof value);
-    return true;
 }
 ///////////////////////////////////////
 const ValidateFullDate = [
@@ -35,20 +31,13 @@ const ValidateFullDate = [
     .withMessage('유효한 일을 입력해주세요.')
 ]
 
-const ValidateWorkout = [
-    query('id')
-    .custom(checkWorkout)
-    .withMessage('요청에 해당하는 운동 유형이 없습니다.')
-]
-
 router.get('/', IsAuth, [
     ...ValidateFullDate,
     Validate
-], diaryController.GetByMonth);
+], diaryController.GetByDate);
 
-router.get('/workout', IsAuth, [
-    ...ValidateWorkout,
-    Validate
-], GetAllWorkout, diaryController.GetAllWorkout);
+router.get('/workout', IsAuth, GetAllWorkout, diaryController.Res, diaryController.GetByWorkoutName);
+
+//router.get('/workout', IsAuth);
 
 export default router;

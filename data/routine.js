@@ -7,8 +7,12 @@ const routineSchema = new Schema({
     userId: {type: Schema.Types.ObjectId, ref: 'User'},
     name: {type: String, required: true},
     isShared: {type: Boolean, required: true},
-    workouts: {type: [Schema.Types.Mixed], required: true},
-}, {timestamps: true});
+    workouts: [{
+        workoutType: {type: String, required: true},
+        name: {type: String, required: true},
+        performance: {type: Schema.Types.Mixed, required: true},
+    }],
+});
 SetVirtualId(routineSchema);
 const Routine = Mongoose.model('Routine', routineSchema);
 

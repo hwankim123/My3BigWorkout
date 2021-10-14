@@ -29,7 +29,7 @@ router.post('/create', validateRoutine, IsAuth, routineController.Create);
 
 router.get('/:id', IsAuth, routineController.GetOneById);
 
-router.get('/update/:id', IsAuth, GetAllWorkout, routineController.Res);
+router.get('/update/:id', IsAuth, GetAllWorkout, routineController.Res); 
 
 router.put('/update/:id', validateRoutine, IsAuth, routineController.Update);
 

@@ -17,7 +17,7 @@ export async function GetAllWorkout(req, res, next) {
         walkJogging: [],
     };
     data.forEach((workout) => {
-        if(workout.type === "default"){
+        if(workout.workoutType === "default"){
             switch(workout.agonist){
                 case "등":
                     req.body.back.push(workout);
@@ -35,12 +35,11 @@ export async function GetAllWorkout(req, res, next) {
                     req.body.arm.push(workout);
                     break;
             }
-        } else if(workout.type === "맨몸운동"){
+        } else if(workout.workoutType === "맨몸운동"){
             req.body.fullBody.push(workout);
-        } else if(workout.type === "유산소"){
+        } else if(workout.workoutType === "유산소"){
             req.body.walkJogging.push(workout);
         }
     });
-    console.log(req.body);
     next();
 }
